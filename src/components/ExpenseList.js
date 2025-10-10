@@ -1,7 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
+import Modal from './Modal';
 import CurrencyFormatter from '../utils/CurrencyFormatter';
 
 const ExpenseList = ({ activeBudget, onRemoveExpense }) => {
+  const [modal, setModal] = useState({ isOpen: false, title: '', message: '', type: 'info' });
+  const [confirmDelete, setConfirmDelete] = useState({ isOpen: false, expenseId: null, expenseDesc: '' });
+
+  const showModal = (title, message, type = 'info') => {
+    setModal({ isOpen: true, title, message, type });
+  };
+
+  const closeModal = () => {
+    setModal({ isOpen: false, title: '', message: '', type: 'info' });
+  };
+
+  const handleDeleteClick = (expenseId, expenseDesc) => {
+    setConfirmDelete({ isOpen: true, expenseId, expenseDesc });
+  };
+
+  const confirmDeleteAction = () => {
+    const { expenseId } = confirmDelete;
+    setConfirmDelete({ isOpen: false, expenseId: null, expenseDesc: '' });
+    onRemoveExpense(expenseId);
+    showModal('¡Eliminado!', 'El gasto ha sido eliminado exitosamente', 'success');
+  };
   if (!activeBudget) {
     return (
       <div className="card">
@@ -53,7 +75,7 @@ const ExpenseList = ({ activeBudget, onRemoveExpense }) => {
             </div>
             <button
               className="btn btn-danger"
-              onClick={() => onRemoveExpense(expense.id)}
+              onClick={() => handleDeleteClick(expense.id, expense.description)}
               style={{ marginLeft: '12px' }}
             >
               Eliminar
@@ -61,6 +83,27 @@ const ExpenseList = ({ activeBudget, onRemoveExpense }) => {
           </div>
         ))}
       </div>
+
+      {/* Modal de confirmación de eliminación */}
+      <Modal
+        isOpen={confirmDelete.isOpen}
+        onClose={() => setConfirmDelete({ isOpen: false, expenseId: null, expenseDesc: '' })}
+        title="Confirmar Eliminación"
+        message={`¿Estás seguro de que deseas eliminar el gasto "${confirmDelete.expenseDesc}"?`}
+        type="confirm"
+        onConfirm={confirmDeleteAction}
+        confirmText="Eliminar"
+        cancelText="Cancelar"
+      />
+
+      {/* Modal de mensajes */}
+      <Modal
+        isOpen={modal.isOpen}
+        onClose={closeModal}
+        title={modal.title}
+        message={modal.message}
+        type={modal.type}
+      />
     </div>
   );
 };

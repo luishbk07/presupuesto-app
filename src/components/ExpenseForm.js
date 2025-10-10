@@ -1,9 +1,19 @@
 import React, { useState } from 'react';
+import Modal from './Modal';
 import CurrencyFormatter from '../utils/CurrencyFormatter';
 
 const ExpenseForm = ({ activeBudget, onAddExpense }) => {
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState('');
+  const [modal, setModal] = useState({ isOpen: false, title: '', message: '', type: 'info' });
+
+  const showModal = (title, message, type = 'info') => {
+    setModal({ isOpen: true, title, message, type });
+  };
+
+  const closeModal = () => {
+    setModal({ isOpen: false, title: '', message: '', type: 'info' });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -16,6 +26,8 @@ const ExpenseForm = ({ activeBudget, onAddExpense }) => {
       
       setDescription('');
       setAmount('');
+      
+      showModal('¡Gasto Agregado!', `Se agregó "${description}" por ${CurrencyFormatter.formatAmount(parseFloat(amount), activeBudget.currency)}`, 'success');
     }
   };
 
@@ -69,6 +81,15 @@ const ExpenseForm = ({ activeBudget, onAddExpense }) => {
           Agregar Gasto
         </button>
       </form>
+
+      {/* Modal de mensajes */}
+      <Modal
+        isOpen={modal.isOpen}
+        onClose={closeModal}
+        title={modal.title}
+        message={modal.message}
+        type={modal.type}
+      />
     </div>
   );
 };

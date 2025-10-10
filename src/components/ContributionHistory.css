@@ -1,0 +1,190 @@
+.contribution-history {
+  margin-top: 30px;
+}
+
+.contribution-history h3 {
+  font-size: 20px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.no-contributions {
+  text-align: center;
+  color: #666;
+  padding: 40px 20px;
+  font-style: italic;
+}
+
+.contributions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.contribution-item {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 16px;
+  transition: all 0.2s ease;
+}
+
+.contribution-item:hover {
+  background: #e9ecef;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.contribution-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.contribution-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.contribution-broker {
+  font-weight: bold;
+  color: #007bff;
+  font-size: 14px;
+}
+
+.contribution-date {
+  font-size: 12px;
+  color: #666;
+}
+
+.contribution-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.contribution-amount {
+  font-size: 18px;
+  font-weight: bold;
+  color: #28a745;
+  margin-right: 8px;
+}
+
+.btn-edit,
+.btn-delete {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.btn-edit:hover {
+  background: #fff3cd;
+}
+
+.btn-delete:hover {
+  background: #f8d7da;
+}
+
+.contribution-edit {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.edit-input {
+  width: 120px;
+  padding: 8px 12px;
+  border: 2px solid #007bff;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.edit-input:focus {
+  outline: none;
+  border-color: #0056b3;
+}
+
+.btn-save,
+.btn-cancel {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+
+.btn-save {
+  background: #28a745;
+  color: white;
+}
+
+.btn-save:hover {
+  background: #218838;
+}
+
+.btn-cancel {
+  background: #dc3545;
+  color: white;
+}
+
+.btn-cancel:hover {
+  background: #c82333;
+}
+
+.contribution-assets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #dee2e6;
+}
+
+.contribution-asset {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: white;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+.asset-symbol-small {
+  font-weight: bold;
+  color: #495057;
+}
+
+.asset-amount-small {
+  color: #28a745;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .contribution-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .contribution-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .contribution-edit {
+    width: 100%;
+  }
+
+  .edit-input {
+    flex: 1;
+  }
+}

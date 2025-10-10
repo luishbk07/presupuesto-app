@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Modal from './Modal';
 import CurrencyFormatter from '../utils/CurrencyFormatter';
 
 const BudgetSelector = ({ budgets, activeBudget, onSelectBudget, onCreateBudget, onDeleteBudget }) => {
@@ -6,6 +7,16 @@ const BudgetSelector = ({ budgets, activeBudget, onSelectBudget, onCreateBudget,
   const [newBudgetName, setNewBudgetName] = useState('');
   const [newBudgetAmount, setNewBudgetAmount] = useState('');
   const [newBudgetCurrency, setNewBudgetCurrency] = useState('USD');
+  const [modal, setModal] = useState({ isOpen: false, title: '', message: '', type: 'info' });
+  const [confirmDelete, setConfirmDelete] = useState({ isOpen: false, budgetId: null, budgetName: '' });
+
+  const showModal = (title, message, type = 'info') => {
+    setModal({ isOpen: true, title, message, type });
+  };
+
+  const closeModal = () => {
+    setModal({ isOpen: false, title: '', message: '', type: 'info' });
+  };
 
   const handleCreateBudget = (e) => {
     e.preventDefault();
@@ -21,7 +32,21 @@ const BudgetSelector = ({ budgets, activeBudget, onSelectBudget, onCreateBudget,
       setNewBudgetAmount('');
       setNewBudgetCurrency('USD');
       setShowCreateForm(false);
+      
+      showModal('¡Presupuesto Creado!', `El presupuesto "${newBudgetName}" ha sido creado exitosamente`, 'success');
     }
+  };
+
+  const handleDeleteClick = (budgetId, budgetName, e) => {
+    e.stopPropagation();
+    setConfirmDelete({ isOpen: true, budgetId, budgetName });
+  };
+
+  const confirmDeleteAction = () => {
+    const { budgetId } = confirmDelete;
+    setConfirmDelete({ isOpen: false, budgetId: null, budgetName: '' });
+    onDeleteBudget(budgetId);
+    showModal('¡Eliminado!', 'El presupuesto ha sido eliminado exitosamente', 'success');
   };
 
   const formatDate = (dateString) => {
@@ -136,12 +161,7 @@ const BudgetSelector = ({ budgets, activeBudget, onSelectBudget, onCreateBudget,
               {budgets.length > 1 && (
                 <button
                   className="btn btn-danger"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (window.confirm('¿Estás seguro de que quieres eliminar este presupuesto?')) {
-                      onDeleteBudget(budget.id);
-                    }
-                  }}
+                  onClick={(e) => handleDeleteClick(budget.id, budget.name, e)}
                   style={{ marginLeft: '8px' }}
                 >
                   Eliminar
@@ -151,6 +171,27 @@ const BudgetSelector = ({ budgets, activeBudget, onSelectBudget, onCreateBudget,
           ))}
         </div>
       )}
+
+      {/* Modal de confirmación de eliminación */}
+      <Modal
+        isOpen={confirmDelete.isOpen}
+        onClose={() => setConfirmDelete({ isOpen: false, budgetId: null, budgetName: '' })}
+        title="Confirmar Eliminación"
+        message={`¿Estás seguro de que deseas eliminar el presupuesto "${confirmDelete.budgetName}"?`}
+        type="confirm"
+        onConfirm={confirmDeleteAction}
+        confirmText="Eliminar"
+        cancelText="Cancelar"
+      />
+
+      {/* Modal de mensajes */}
+      <Modal
+        isOpen={modal.isOpen}
+        onClose={closeModal}
+        title={modal.title}
+        message={modal.message}
+        type={modal.type}
+      />
     </div>
   );
 };
