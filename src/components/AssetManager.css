@@ -1,0 +1,389 @@
+.asset-manager-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+  animation: fadeIn 0.2s ease;
+}
+
+.asset-manager-container {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  max-width: 900px;
+  width: 95%;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.3s ease;
+}
+
+.asset-manager-header {
+  padding: 24px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 16px 16px 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.asset-manager-header h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.close-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 20px;
+  transition: all 0.2s ease;
+}
+
+.close-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: rotate(90deg);
+}
+
+.asset-manager-body {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.weight-summary {
+  padding: 16px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 18px;
+}
+
+.weight-summary.valid {
+  background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+  border: 2px solid #28a745;
+  color: #155724;
+}
+
+.weight-summary.invalid {
+  background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+  border: 2px solid #ffc107;
+  color: #856404;
+}
+
+.btn-normalize {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-normalize:hover {
+  background: #0056b3;
+  transform: translateY(-2px);
+}
+
+.assets-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+  transition: background-color 0.2s ease;
+}
+
+.assets-list.dragging-over {
+  background: #f0f8ff;
+  border-radius: 12px;
+  padding: 8px;
+}
+
+.no-assets {
+  text-align: center;
+  color: #666;
+  padding: 40px 20px;
+  font-style: italic;
+}
+
+.asset-row {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.2s ease;
+  cursor: grab;
+}
+
+.asset-row:hover {
+  background: #e9ecef;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.asset-row.dragging {
+  opacity: 0.5;
+  cursor: grabbing;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  transform: rotate(2deg);
+}
+
+.drag-handle {
+  cursor: grab;
+  font-size: 20px;
+  color: #999;
+  padding: 0 8px;
+  user-select: none;
+  transition: color 0.2s ease;
+}
+
+.drag-handle:hover {
+  color: #007bff;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+.asset-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.asset-symbol {
+  font-weight: bold;
+  font-size: 16px;
+  color: #007bff;
+}
+
+.asset-name {
+  font-size: 14px;
+  color: #666;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.asset-stats {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.asset-weight {
+  font-size: 18px;
+  font-weight: bold;
+  color: #28a745;
+}
+
+.asset-dividend {
+  font-size: 12px;
+  color: #6c757d;
+  background: #e9ecef;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.asset-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-edit-small,
+.btn-delete-small {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.btn-edit-small:hover {
+  background: #fff3cd;
+}
+
+.btn-delete-small:hover {
+  background: #f8d7da;
+}
+
+/* Formulario de edición inline */
+.asset-edit-form {
+  display: grid;
+  grid-template-columns: 100px 1fr 100px 100px auto;
+  gap: 12px;
+  width: 100%;
+  align-items: center;
+}
+
+.asset-edit-form input {
+  padding: 8px 12px;
+  border: 2px solid #007bff;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.asset-edit-form input:focus {
+  outline: none;
+  border-color: #0056b3;
+}
+
+.input-symbol {
+  text-transform: uppercase;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-save,
+.btn-cancel {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+
+.btn-save {
+  background: #28a745;
+  color: white;
+}
+
+.btn-save:hover {
+  background: #218838;
+}
+
+.btn-cancel {
+  background: #dc3545;
+  color: white;
+}
+
+.btn-cancel:hover {
+  background: #c82333;
+}
+
+/* Formulario de agregar activo */
+.add-asset-form {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.add-asset-form h3 {
+  margin: 0 0 16px 0;
+  color: #333;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #495057;
+}
+
+.form-group input {
+  padding: 10px 12px;
+  border: 2px solid #ced4da;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.asset-manager-footer {
+  padding: 20px 24px;
+  background: #f8f9fa;
+  border-radius: 0 0 16px 16px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  border-top: 1px solid #e1e5e9;
+}
+
+@media (max-width: 768px) {
+  .asset-manager-container {
+    width: 100%;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+
+  .asset-manager-header {
+    border-radius: 0;
+  }
+
+  .asset-edit-form {
+    grid-template-columns: 1fr;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .asset-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .asset-stats {
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .asset-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .weight-summary {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+}

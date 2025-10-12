@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import AssetManager from './AssetManager';
 
-const PortfolioCard = ({ portfolio, investmentService, onSelect }) => {
+const PortfolioCard = ({ portfolio, investmentService, onSelect, onUpdate }) => {
   const [contributions, setContributions] = useState([]);
   const [dividends, setDividends] = useState(null);
   const [expanded, setExpanded] = useState(false);
+  const [showAssetManager, setShowAssetManager] = useState(false);
 
   useEffect(() => {
     loadPortfolioData();
@@ -82,13 +84,35 @@ const PortfolioCard = ({ portfolio, investmentService, onSelect }) => {
         </div>
       )}
 
-      <button 
-        className="btn btn-primary"
-        onClick={onSelect}
-        style={{ marginTop: '12px', width: '100%' }}
-      >
-        Ver Proyecciones
-      </button>
+      <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
+        <button 
+          className="btn btn-secondary"
+          onClick={() => setShowAssetManager(true)}
+          style={{ flex: 1 }}
+        >
+          ⚙️ Gestionar Activos
+        </button>
+        <button 
+          className="btn btn-primary"
+          onClick={onSelect}
+          style={{ flex: 1 }}
+        >
+          📈 Ver Proyecciones
+        </button>
+      </div>
+
+      {/* Asset Manager Modal */}
+      {showAssetManager && (
+        <AssetManager
+          portfolio={portfolio}
+          investmentService={investmentService}
+          onUpdate={() => {
+            loadPortfolioData();
+            if (onUpdate) onUpdate();
+          }}
+          onClose={() => setShowAssetManager(false)}
+        />
+      )}
     </div>
   );
 };
