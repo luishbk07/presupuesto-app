@@ -62,6 +62,62 @@
   flex: 1;
 }
 
+.total-amount-section {
+  background: linear-gradient(135deg, #e7f3ff 0%, #cfe2ff 100%);
+  border: 2px solid #007bff;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+  transition: all 0.3s ease;
+}
+
+.total-amount-section.highlight-required {
+  background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+  border: 3px solid #ffc107;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(255, 193, 7, 0);
+  }
+}
+
+.total-amount-section label {
+  display: block;
+  font-weight: 600;
+  color: #004085;
+  margin-bottom: 8px;
+  font-size: 16px;
+}
+
+.total-amount-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #007bff;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+
+.total-amount-input:focus {
+  outline: none;
+  border-color: #0056b3;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.total-amount-hint {
+  display: block;
+  margin-top: 8px;
+  font-size: 13px;
+  color: #004085;
+  font-style: italic;
+}
+
 .weight-summary {
   padding: 16px;
   border-radius: 12px;
@@ -194,6 +250,15 @@
   color: #28a745;
 }
 
+.asset-amount-display {
+  font-size: 14px;
+  color: #28a745;
+  font-weight: 600;
+  background: #d4edda;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
 .asset-dividend {
   font-size: 12px;
   color: #6c757d;
@@ -229,10 +294,16 @@
 /* Formulario de edición inline */
 .asset-edit-form {
   display: grid;
-  grid-template-columns: 100px 1fr 100px 100px auto;
+  grid-template-columns: 100px 1fr 100px 100px 80px auto;
   gap: 12px;
   width: 100%;
   align-items: center;
+}
+
+.input-weight-display {
+  text-align: center;
+  font-weight: 600;
+  color: #28a745;
 }
 
 .asset-edit-form input {

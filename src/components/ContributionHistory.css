@@ -139,13 +139,26 @@
   background: #c82333;
 }
 
+.contribution-assets-header {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #dee2e6;
+}
+
+.assets-count {
+  font-size: 11px;
+  color: #666;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 .contribution-assets {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid #dee2e6;
+  margin-top: 8px;
+  max-height: none; /* Asegurar que no haya límite de altura */
 }
 
 .contribution-asset {

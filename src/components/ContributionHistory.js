@@ -19,12 +19,12 @@ const ContributionHistory = ({ investmentService, onUpdate }) => {
     try {
       const allContributions = await investmentService.db.getAllContributions();
       const allPortfolios = await investmentService.db.getAllPortfolios();
-      
+
       // Ordenar por fecha descendente (más reciente primero)
-      const sorted = allContributions.sort((a, b) => 
+      const sorted = allContributions.sort((a, b) =>
         new Date(b.date) - new Date(a.date)
       );
-      
+
       setContributions(sorted);
       setPortfolios(allPortfolios);
     } catch (error) {
@@ -74,14 +74,14 @@ const ContributionHistory = ({ investmentService, onUpdate }) => {
       const portfolio = await investmentService.db.getPortfolio(contribution.portfolioId);
       const allContribs = await investmentService.db.getContributionsByPortfolio(contribution.portfolioId);
       const totalInvested = allContribs.reduce((sum, c) => sum + (c.id === contribution.id ? newAmount : c.amount), 0);
-      
+
       portfolio.totalInvested = totalInvested;
       await investmentService.db.savePortfolio(portfolio);
 
       setEditingId(null);
       await loadContributions();
       if (onUpdate) onUpdate();
-      
+
       showModal('¡Actualizado!', 'El aporte ha sido actualizado exitosamente', 'success');
     } catch (error) {
       console.error('Error actualizando aporte:', error);
@@ -110,13 +110,13 @@ const ContributionHistory = ({ investmentService, onUpdate }) => {
       const portfolio = await investmentService.db.getPortfolio(contribution.portfolioId);
       const allContribs = await investmentService.db.getContributionsByPortfolio(contribution.portfolioId);
       const totalInvested = allContribs.reduce((sum, c) => sum + c.amount, 0);
-      
+
       portfolio.totalInvested = totalInvested;
       await investmentService.db.savePortfolio(portfolio);
 
       await loadContributions();
       if (onUpdate) onUpdate();
-      
+
       showModal('¡Eliminado!', 'El aporte ha sido eliminado exitosamente', 'success');
     } catch (error) {
       console.error('Error eliminando aporte:', error);
@@ -146,8 +146,10 @@ const ContributionHistory = ({ investmentService, onUpdate }) => {
 
   return (
     <div className="contribution-history card">
-      <h3>📜 Historial de Aportes</h3>
-      
+      <div className="header">
+        <h3>📜 Historial de Aportes</h3>
+        <h3> 📊 Total invertido: ${contributions.reduce((sum, c) => sum + c.amount, 0).toFixed(2)}</h3>
+      </div>
       <div className="contributions-list">
         {contributions.map(contribution => (
           <div key={contribution.id} className="contribution-item">
@@ -160,7 +162,7 @@ const ContributionHistory = ({ investmentService, onUpdate }) => {
                   {formatDate(contribution.date)}
                 </span>
               </div>
-              
+
               {editingId === contribution.id ? (
                 <div className="contribution-edit">
                   <input
@@ -172,13 +174,13 @@ const ContributionHistory = ({ investmentService, onUpdate }) => {
                     min="0.01"
                     step="0.01"
                   />
-                  <button 
+                  <button
                     className="btn-save"
                     onClick={() => handleSaveEdit(contribution)}
                   >
                     ✓
                   </button>
-                  <button 
+                  <button
                     className="btn-cancel"
                     onClick={handleCancelEdit}
                   >
@@ -190,14 +192,14 @@ const ContributionHistory = ({ investmentService, onUpdate }) => {
                   <span className="contribution-amount">
                     ${contribution.amount.toFixed(2)}
                   </span>
-                  <button 
+                  <button
                     className="btn-edit"
                     onClick={() => handleEdit(contribution)}
                     title="Editar"
                   >
                     ✏️
                   </button>
-                  <button 
+                  <button
                     className="btn-delete"
                     onClick={() => handleDelete(contribution)}
                     title="Eliminar"
@@ -209,15 +211,32 @@ const ContributionHistory = ({ investmentService, onUpdate }) => {
             </div>
 
             {contribution.assets && contribution.assets.length > 0 && (
+              <>
+                <div className="contribution-assets-header">
+                  <span className="assets-count">
+                    📊 {contribution.assets.filter(a => a.amount > 0).length} activos
+                  </span>
+                </div>
+                <div className="contribution-assets">
+                  {contribution.assets
+                    .filter(asset => asset.amount > 0)
+                    .sort((a, b) => b.amount - a.amount)
+                    .map((asset, index) => (
+                      <div key={index} className="contribution-asset">
+                        <span className="asset-symbol-small">{asset.symbol}</span>
+                        <span className="asset-amount-small">
+                          ${asset.amount.toFixed(2)}
+                        </span>
+                      </div>
+                    ))}
+                </div>
+              </>
+            )}
+            {contribution.assets && contribution.assets.length === 0 && (
               <div className="contribution-assets">
-                {contribution.assets.map((asset, index) => (
-                  <div key={index} className="contribution-asset">
-                    <span className="asset-symbol-small">{asset.symbol}</span>
-                    <span className="asset-amount-small">
-                      ${asset.amount.toFixed(2)}
-                    </span>
-                  </div>
-                ))}
+                <span style={{ color: '#999', fontSize: '12px', fontStyle: 'italic' }}>
+                  Sin distribución por activos
+                </span>
               </div>
             )}
           </div>

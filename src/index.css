@@ -20,6 +20,12 @@ body {
   padding: 20px;
 }
 
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .card {
   background: white;
   border-radius: 12px;

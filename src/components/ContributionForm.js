@@ -6,6 +6,20 @@ const ContributionForm = ({ portfolios, onSubmit, onDistribute, onCancel }) => {
   const [selectedPortfolio, setSelectedPortfolio] = useState('');
   const [manualAmount, setManualAmount] = useState('');
 
+  const getSelectedPortfolioData = () => {
+    return portfolios.find(p => p.id === selectedPortfolio);
+  };
+
+  const calculateAssetDistribution = (portfolio, amount) => {
+    if (!portfolio || !portfolio.assets) return [];
+    return portfolio.assets.map(asset => ({
+      symbol: asset.symbol,
+      name: asset.name,
+      amount: amount * (asset.weight || 0),
+      weight: asset.weight || 0
+    }));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -106,6 +120,27 @@ const ContributionForm = ({ portfolios, onSubmit, onDistribute, onCancel }) => {
                   required
                 />
               </div>
+
+              {selectedPortfolio && manualAmount && parseFloat(manualAmount) > 0 && (
+                <div className="distribution-preview">
+                  <h4>📊 Distribución Automática por Activo:</h4>
+                  <div className="asset-distribution-list">
+                    {calculateAssetDistribution(getSelectedPortfolioData(), parseFloat(manualAmount)).map((asset, index) => (
+                      <div key={index} className="preview-item">
+                        <div className="asset-info">
+                          <span className="asset-symbol">{asset.symbol}</span>
+                          <span className="asset-weight">{(asset.weight * 100).toFixed(1)}%</span>
+                        </div>
+                        <strong className="asset-amount">${asset.amount.toFixed(2)}</strong>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="preview-total">
+                    <span>Total:</span>
+                    <strong>${parseFloat(manualAmount).toFixed(2)}</strong>
+                  </div>
+                </div>
+              )}
             </>
           )}
 
