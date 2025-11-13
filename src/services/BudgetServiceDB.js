@@ -59,6 +59,39 @@ class BudgetServiceDB {
     return await this.loadBudgetData();
   }
 
+  async toggleExpensePaid(expenseId) {
+    const activeBudget = await this.getActiveBudget();
+    if (!activeBudget) return await this.loadBudgetData();
+
+    activeBudget.expenses = activeBudget.expenses.map(expense => {
+      if (expense.id === expenseId) {
+        return {
+          ...expense,
+          paid: !expense.paid
+        };
+      }
+      return expense;
+    });
+
+    await this.db.saveBudget(activeBudget);
+
+    return await this.loadBudgetData();
+  }
+
+  async reorderExpenses(sourceIndex, destinationIndex) {
+    const activeBudget = await this.getActiveBudget();
+    if (!activeBudget) return await this.loadBudgetData();
+
+    const expenses = Array.from(activeBudget.expenses);
+    const [removed] = expenses.splice(sourceIndex, 1);
+    expenses.splice(destinationIndex, 0, removed);
+    
+    activeBudget.expenses = expenses;
+    await this.db.saveBudget(activeBudget);
+
+    return await this.loadBudgetData();
+  }
+
   async removeExpense(expenseId) {
     const activeBudget = await this.getActiveBudget();
     if (!activeBudget) return await this.loadBudgetData();

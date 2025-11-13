@@ -106,10 +106,104 @@ body {
   border-radius: 8px;
   margin-bottom: 12px;
   background-color: #fafafa;
+  transition: all 0.3s ease;
+  cursor: grab;
+}
+
+.expense-item.expense-dragging {
+  opacity: 0.5;
+  cursor: grabbing;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  transform: rotate(2deg);
+}
+
+.expenses-dragging-over {
+  background: #f0f8ff;
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.expense-drag-handle {
+  cursor: grab;
+  font-size: 20px;
+  color: #999;
+  padding: 0 8px;
+  margin-right: 8px;
+  user-select: none;
+  transition: color 0.2s ease;
+}
+
+.expense-drag-handle:hover {
+  color: #007bff;
+}
+
+.expense-drag-handle:active {
+  cursor: grabbing;
+}
+
+.expense-item.expense-paid {
+  background-color: #e8f5e9;
+  border-color: #c8e6c9;
+  opacity: 0.7;
+}
+
+.expense-checkbox {
+  display: flex;
+  align-items: center;
+  margin-right: 16px;
+}
+
+.expense-checkbox-input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.expense-checkbox-label {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-custom {
+  width: 24px;
+  height: 24px;
+  border: 2px solid #007bff;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  background: white;
+}
+
+.expense-checkbox-input:checked + .expense-checkbox-label .checkbox-custom {
+  background: #28a745;
+  border-color: #28a745;
+}
+
+.expense-checkbox-input:checked + .expense-checkbox-label .checkbox-custom::after {
+  content: '✓';
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.expense-checkbox-input:hover + .expense-checkbox-label .checkbox-custom {
+  border-color: #0056b3;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
 }
 
 .expense-info {
   flex: 1;
+  transition: all 0.3s ease;
+}
+
+.expense-paid .expense-info {
+  text-decoration: line-through;
+  color: #999;
 }
 
 .expense-description {
@@ -120,6 +214,10 @@ body {
 .expense-amount {
   color: #666;
   font-size: 14px;
+}
+
+.expense-paid .expense-amount {
+  color: #999;
 }
 
 .summary-item:has(.status-green) {

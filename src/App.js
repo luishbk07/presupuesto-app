@@ -109,6 +109,18 @@ function App() {
     setBudgetData(updatedData);
   };
 
+  const handleToggleExpensePaid = async (expenseId) => {
+    if (!services) return;
+    const updatedData = await services.budget.toggleExpensePaid(expenseId);
+    setBudgetData(updatedData);
+  };
+
+  const handleReorderExpenses = async (sourceIndex, destinationIndex) => {
+    if (!services) return;
+    const updatedData = await services.budget.reorderExpenses(sourceIndex, destinationIndex);
+    setBudgetData(updatedData);
+  };
+
   const handleModuleChange = (module) => {
     setActiveModule(module);
     localStorage.setItem('activeModule', module);
@@ -184,6 +196,8 @@ function App() {
             <ExpenseList
               activeBudget={activeBudget}
               onRemoveExpense={handleRemoveExpense}
+              onToggleExpensePaid={handleToggleExpensePaid}
+              onReorderExpenses={handleReorderExpenses}
             />
           </div>
         </>

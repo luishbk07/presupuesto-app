@@ -83,6 +83,64 @@ class BudgetService {
     return updatedData;
   }
 
+  toggleExpensePaid(data, expenseId) {
+    const activeBudget = this.getActiveBudget(data);
+    if (!activeBudget) return data;
+
+    const updatedBudgets = data.budgets.map(budget => {
+      if (budget.id === activeBudget.id) {
+        return {
+          ...budget,
+          expenses: budget.expenses.map(expense => {
+            if (expense.id === expenseId) {
+              return {
+                ...expense,
+                paid: !expense.paid
+              };
+            }
+            return expense;
+          })
+        };
+      }
+      return budget;
+    });
+
+    const updatedData = {
+      ...data,
+      budgets: updatedBudgets
+    };
+
+    this.saveBudgetData(updatedData);
+    return updatedData;
+  }
+
+  reorderExpenses(data, sourceIndex, destinationIndex) {
+    const activeBudget = this.getActiveBudget(data);
+    if (!activeBudget) return data;
+
+    const updatedBudgets = data.budgets.map(budget => {
+      if (budget.id === activeBudget.id) {
+        const expenses = Array.from(budget.expenses);
+        const [removed] = expenses.splice(sourceIndex, 1);
+        expenses.splice(destinationIndex, 0, removed);
+        
+        return {
+          ...budget,
+          expenses
+        };
+      }
+      return budget;
+    });
+
+    const updatedData = {
+      ...data,
+      budgets: updatedBudgets
+    };
+
+    this.saveBudgetData(updatedData);
+    return updatedData;
+  }
+
   removeExpense(data, expenseId) {
     const activeBudget = this.getActiveBudget(data);
     if (!activeBudget) return data;

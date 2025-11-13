@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import Modal from './Modal';
 import CurrencyFormatter from '../utils/CurrencyFormatter';
 
-const ExpenseList = ({ activeBudget, onRemoveExpense }) => {
+const ExpenseList = ({ activeBudget, onRemoveExpense, onToggleExpensePaid, onReorderExpenses }) => {
   const [modal, setModal] = useState({ isOpen: false, title: '', message: '', type: 'info' });
   const [confirmDelete, setConfirmDelete] = useState({ isOpen: false, expenseId: null, expenseDesc: '' });
 
@@ -24,6 +25,18 @@ const ExpenseList = ({ activeBudget, onRemoveExpense }) => {
     onRemoveExpense(expenseId);
     showModal('¡Eliminado!', 'El gasto ha sido eliminado exitosamente', 'success');
   };
+
+  const handleDragEnd = (result) => {
+    if (!result.destination) return;
+    
+    const sourceIndex = result.source.index;
+    const destinationIndex = result.destination.index;
+    
+    if (sourceIndex === destinationIndex) return;
+    
+    onReorderExpenses(sourceIndex, destinationIndex);
+  };
+
   if (!activeBudget) {
     return (
       <div className="card">
@@ -64,25 +77,59 @@ const ExpenseList = ({ activeBudget, onRemoveExpense }) => {
       <p style={{ marginBottom: '16px', color: '#666' }}>
         Presupuesto: <strong>{activeBudget.name}</strong>
       </p>
-      <div>
-        {activeBudget.expenses.map((expense) => (
-          <div key={expense.id} className="expense-item">
-            <div className="expense-info">
-              <div className="expense-description">{expense.description}</div>
-              <div className="expense-amount">
-                {CurrencyFormatter.formatAmount(expense.amount, activeBudget.currency)} • {formatDate(expense.date)}
-              </div>
-            </div>
-            <button
-              className="btn btn-danger"
-              onClick={() => handleDeleteClick(expense.id, expense.description)}
-              style={{ marginLeft: '12px' }}
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <Droppable droppableId="expenses">
+          {(provided, snapshot) => (
+            <div
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              className={snapshot.isDraggingOver ? 'expenses-dragging-over' : ''}
             >
-              Eliminar
-            </button>
-          </div>
-        ))}
-      </div>
+              {activeBudget.expenses.map((expense, index) => (
+                <Draggable key={expense.id} draggableId={expense.id} index={index}>
+                  {(provided, snapshot) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      className={`expense-item ${expense.paid ? 'expense-paid' : ''} ${snapshot.isDragging ? 'expense-dragging' : ''}`}
+                    >
+                      <div className="expense-drag-handle" {...provided.dragHandleProps}>
+                        ⋮⋮
+                      </div>
+                      <div className="expense-checkbox">
+                        <input
+                          type="checkbox"
+                          id={`expense-${expense.id}`}
+                          checked={expense.paid || false}
+                          onChange={() => onToggleExpensePaid(expense.id)}
+                          className="expense-checkbox-input"
+                        />
+                        <label htmlFor={`expense-${expense.id}`} className="expense-checkbox-label">
+                          <span className="checkbox-custom"></span>
+                        </label>
+                      </div>
+                      <div className="expense-info">
+                        <div className="expense-description">{expense.description}</div>
+                        <div className="expense-amount">
+                          {CurrencyFormatter.formatAmount(expense.amount, activeBudget.currency)} • {formatDate(expense.date)}
+                        </div>
+                      </div>
+                      <button
+                        className="btn btn-danger"
+                        onClick={() => handleDeleteClick(expense.id, expense.description)}
+                        style={{ marginLeft: '12px' }}
+                      >
+                        Eliminar
+                      </button>
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
 
       {/* Modal de confirmación de eliminación */}
       <Modal
