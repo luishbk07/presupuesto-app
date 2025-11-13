@@ -158,7 +158,8 @@
   flex-wrap: wrap;
   gap: 8px;
   margin-top: 8px;
-  max-height: none; /* Asegurar que no haya límite de altura */
+  max-height: none;
+  /* Asegurar que no haya límite de altura */
 }
 
 .contribution-asset {
@@ -199,5 +200,18 @@
 
   .edit-input {
     flex: 1;
+  }
+}
+
+.distribution-mode-selector {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  justify-content: space-around;
+
+  label {
+    display: flex;
+    align-items: center;
+    gap: .2rem;
   }
 }

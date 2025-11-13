@@ -47,9 +47,9 @@ const InvestmentDashboard = ({ investmentService, exportService }) => {
     setModal({ isOpen: false, title: '', message: '', type: 'info' });
   };
 
-  const handleAddContribution = async (portfolioId, amount) => {
+  const handleAddContribution = async (portfolioId, amount, assets) => {
     try {
-      await investmentService.addContribution(portfolioId, amount);
+      await investmentService.addContribution(portfolioId, amount, assets || []);
       await loadData();
       setShowContributionForm(false);
       showModal('¡Éxito!', 'Aporte agregado correctamente', 'success');
