@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Modal from './Modal';
 import './ContributionHistory.css';
 
-const ContributionHistory = ({ investmentService, onUpdate }) => {
+const ContributionHistory = ({ investmentService, onUpdate, refreshKey = 0 }) => {
   const [contributions, setContributions] = useState([]);
   const [portfolios, setPortfolios] = useState([]);
   const [editingId, setEditingId] = useState(null);
@@ -13,7 +13,7 @@ const ContributionHistory = ({ investmentService, onUpdate }) => {
   useEffect(() => {
     loadContributions();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [refreshKey]);
 
   const loadContributions = async () => {
     try {

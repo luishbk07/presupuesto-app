@@ -14,6 +14,7 @@ const InvestmentDashboard = ({ investmentService, exportService }) => {
   const [selectedPortfolio, setSelectedPortfolio] = useState(null);
   const [showContributionForm, setShowContributionForm] = useState(false);
   const [alerts, setAlerts] = useState([]);
+  const [historyRefreshKey, setHistoryRefreshKey] = useState(0);
   const [modal, setModal] = useState({ isOpen: false, title: '', message: '', type: 'info' });
 
   useEffect(() => {
@@ -25,7 +26,7 @@ const InvestmentDashboard = ({ investmentService, exportService }) => {
     try {
       // Inicializar portafolios si no existen
       await investmentService.initializePortfolios();
-      
+
       // Cargar datos
       const portfolioData = await investmentService.db.getAllPortfolios();
       const summaryData = await investmentService.getOverallSummary();
@@ -53,6 +54,7 @@ const InvestmentDashboard = ({ investmentService, exportService }) => {
       await loadData();
       setShowContributionForm(false);
       showModal('¡Éxito!', 'Aporte agregado correctamente', 'success');
+      setHistoryRefreshKey((k) => k + 1);
     } catch (error) {
       console.error('Error agregando aporte:', error);
       showModal('Error', 'No se pudo agregar el aporte. Intenta nuevamente.', 'error');
@@ -62,14 +64,15 @@ const InvestmentDashboard = ({ investmentService, exportService }) => {
   const handleDistributeContribution = async (totalAmount) => {
     try {
       const distributions = await investmentService.distributeMonthlyContribution(totalAmount);
-      
+
       for (const dist of distributions) {
         await investmentService.addContribution(dist.portfolioId, dist.amount, dist.assets);
       }
-      
+
       setShowContributionForm(false);
       await loadData();
       showModal('¡Éxito!', `Aporte de $${totalAmount} distribuido exitosamente entre tus portafolios`, 'success');
+      setHistoryRefreshKey((k) => k + 1);
     } catch (error) {
       console.error('Error distribuyendo aporte:', error);
       showModal('Error', 'No se pudo distribuir el aporte. Intenta nuevamente.', 'error');
@@ -123,28 +126,28 @@ const InvestmentDashboard = ({ investmentService, exportService }) => {
 
       {/* Acciones Rápidas */}
       <div className="quick-actions">
-        <button 
+        <button
           className="btn btn-primary"
           onClick={() => setShowContributionForm(!showContributionForm)}
         >
           + Agregar Aporte
         </button>
-        
-        <button 
+
+        <button
           className="btn btn-secondary"
           onClick={handleExportExcel}
         >
           📊 Exportar a Excel
         </button>
-        
-        <button 
+
+        <button
           className="btn btn-secondary"
           onClick={handleExportJSON}
         >
           💾 Crear Backup
         </button>
 
-        <ImportBackup 
+        <ImportBackup
           exportService={exportService}
           onImportSuccess={loadData}
         />
@@ -177,6 +180,7 @@ const InvestmentDashboard = ({ investmentService, exportService }) => {
       <ContributionHistory
         investmentService={investmentService}
         onUpdate={loadData}
+        refreshKey={historyRefreshKey}
       />
 
       {/* Gráfico de Proyecciones */}
